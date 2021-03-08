@@ -1,0 +1,6 @@
+.ropeproject
+data/
+out/
+final_module
+__pycache__
+*.pyc
