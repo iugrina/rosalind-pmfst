@@ -8,6 +8,7 @@ Rosalind ID: BA2B
 URL: http://rosalind.info/problems/ba2b/
 """
 
+
 def rosalindprint(res, newline=False):
     text = ""
     sep = " "
@@ -15,11 +16,13 @@ def rosalindprint(res, newline=False):
         sep = "\n"
     for i in res:
         text = text + str(i) + sep
-    return(text.strip())
+    return text.strip()
+
 
 def kmer(text, i, k):
     """substring of text from i-th position for the next k letters"""
-    return text[i:(i+k)]
+    return text[i : (i + k)]
+
 
 def kmersindices(text, k):
     """Find indices of all k-mers in text"""
@@ -30,7 +33,7 @@ def kmersindices(text, k):
             D[tmp].append(i)
         except KeyError:
             D[tmp] = [i]
-    return(D)
+    return D
 
 
 def kmersfrequency(text, k):
@@ -38,7 +41,8 @@ def kmersfrequency(text, k):
     D = kmersindices(text, k)
     for k, v in D.items():
         D[k] = len(v)
-    return(D)
+    return D
+
 
 def HammingDistance(p, q):
     """Computes the hamming distance between strings p and q"""
@@ -52,31 +56,35 @@ def HammingDistance(p, q):
 
     return dist
 
+
 def minhamm(text, pattern):
     """
     Find the minumum Hamming distance between Pattern and any k-mer in Text
     where k = len(pattern)
     """
     D = kmersfrequency(text, len(pattern))
-    return(min([HammingDistance(pattern, x) for x in D.keys()]))
+    return min([HammingDistance(pattern, x) for x in D.keys()])
+
 
 def subsets(n, k):
     """return all k-sized subsets (as indices) of an n-sized set"""
 
     if k == 0:
-        return([[0]*n])
+        return [[0] * n]
 
     def helper(l, lastn):
         if sum(l) < lastn or lastn < 1:
             return []
-        for i in range(len(l)-1, -1, -1):
+        for i in range(len(l) - 1, -1, -1):
             if l[i] == 1:
                 lastind = i
                 break
-        head = l[:(lastind - lastn + 1)]
+        head = l[: (lastind - lastn + 1)]
         N = len(l) - len(head)
-        res = [head + [0] * i + [1] * lastn + [0] * (N - i - lastn)
-               for i in range(0, N - lastn + 1)]
+        res = [
+            head + [0] * i + [1] * lastn + [0] * (N - i - lastn)
+            for i in range(0, N - lastn + 1)
+        ]
         return res
 
     def recursion(l, lastn):
@@ -85,10 +93,10 @@ def subsets(n, k):
             return tmp
         L = []
         for x in tmp:
-            L.extend(recursion(x, lastn-1))
+            L.extend(recursion(x, lastn - 1))
         return L
 
-    startlist = [1] * k + [0] * (n-k)
+    startlist = [1] * k + [0] * (n - k)
     return recursion(startlist, k)
 
 
@@ -98,13 +106,13 @@ def mutations(pattern, errorind):
 
     def f(base, start=""):
         if base == "A":
-            return([start + "C", start + "G", start + "T"])
+            return [start + "C", start + "G", start + "T"]
         if base == "C":
-            return([start + "A", start + "G", start + "T"])
+            return [start + "A", start + "G", start + "T"]
         if base == "G":
-            return([start + "A", start + "C", start + "T"])
+            return [start + "A", start + "C", start + "T"]
         if base == "T":
-            return([start + "A", start + "C", start + "G"])
+            return [start + "A", start + "C", start + "G"]
 
     L = [""]
 
@@ -115,7 +123,8 @@ def mutations(pattern, errorind):
             tmp = [f(base, x) for x in L]
             L = []
             [[L.append(x) for x in xl] for xl in tmp]
-    return(L)
+    return L
+
 
 def kmersNeighbours(text, k):
     """
@@ -138,8 +147,7 @@ def kmersNeighbours(text, k):
     RES = dict()
     for pattern in L:
         RES[pattern] = min([HammingDistance(pattern, x) for x in D.keys()])
-    return(RES)
-
+    return RES
 
 
 def MedianStrings(dnalist, k):
@@ -165,10 +173,10 @@ def MedianStrings(dnalist, k):
 
     mincount = min(RES.values())
 
-    return([key for key, value in RES.items() if mincount == value])
+    return [key for key, value in RES.items() if mincount == value]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     import sys
 

@@ -11,7 +11,7 @@ URL: http://rosalind.info/problems/ba1a/
 
 def kmer(text, i, k):
     """substring of text from i-th position for the next k letters"""
-    return text[i:(i+k)]
+    return text[i : (i + k)]
 
 
 def patterncount(text, pattern):
@@ -24,7 +24,7 @@ def patterncount(text, pattern):
     return count
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     import sys
 

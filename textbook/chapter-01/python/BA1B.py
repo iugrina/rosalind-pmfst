@@ -11,7 +11,7 @@ URL: http://rosalind.info/problems/ba1b/
 
 def kmer(text, i, k):
     """substring of text from i-th position for the next k letters"""
-    return text[i:(i+k)]
+    return text[i : (i + k)]
 
 
 def kmersfrequency(text, k):
@@ -22,17 +22,16 @@ def kmersfrequency(text, k):
             D[tmp] = D[tmp] + 1
         except KeyError:
             D[tmp] = 1
-    return(D)
+    return D
 
 
 def mostfrequentkmers(text, k):
     D = kmersfrequency(text, k)
     maxcount = max(D.values())
-    return dict.fromkeys([x[0] for x in D.items() if x[1] == maxcount],
-                         maxcount)
+    return dict.fromkeys([x[0] for x in D.items() if x[1] == maxcount], maxcount)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     import sys
 

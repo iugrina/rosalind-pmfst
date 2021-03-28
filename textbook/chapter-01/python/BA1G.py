@@ -8,6 +8,7 @@ Rosalind ID: BA1G
 URL: http://rosalind.info/problems/ba1g
 """
 
+
 def HammingDistance(p, q):
     """Computes the hamming distance between strings p and q"""
     if len(p) != len(q):
@@ -21,16 +22,16 @@ def HammingDistance(p, q):
     return dist
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
-#    p = "GGGCCGTTGGT"
-#    q = "GGACCGTTGAC"
-#    print(HammingDistance(p,q))
+    #    p = "GGGCCGTTGGT"
+    #    q = "GGACCGTTGAC"
+    #    print(HammingDistance(p,q))
 
-    with open('../data/rosalind_ba1g.txt', 'r') as myfile:
-        p = myfile.readline().replace('\n', '')
-        q = myfile.readline().replace('\n', '')
+    with open("../data/rosalind_ba1g.txt", "r") as myfile:
+        p = myfile.readline().replace("\n", "")
+        q = myfile.readline().replace("\n", "")
 
     text_file = open("./out/rosalind_ba1g.txt", "w")
-    text_file.write(str(HammingDistance(p,q)))
+    text_file.write(str(HammingDistance(p, q)))
     text_file.close()

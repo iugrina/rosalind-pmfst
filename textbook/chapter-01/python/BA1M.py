@@ -10,16 +10,16 @@ URL: http://rosalind.info/problems/ba1M/
 
 def NumberToPattern(index, k):
     pattern = list()
-    D = {0: 'A', 1: 'C', 2: 'G', 3: 'T'}
+    D = {0: "A", 1: "C", 2: "G", 3: "T"}
     q = index
     for i in range(0, k):
         r = q % 4
         q = q // 4
         pattern.append(D[r])
-    return("".join(pattern[::-1]))
+    return "".join(pattern[::-1])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     import sys
 
