@@ -9,16 +9,6 @@ URL: http://rosalind.info/problems/ba3b/
 """
 
 
-def rosalindprint(res, newline=False):
-    text = ""
-    sep = " "
-    if newline:
-        sep = "\n"
-    for i in res:
-        text = text + str(i) + sep
-    return text.strip()
-
-
 def string_spelled(patterns):
     """Find the string spelled by a genome path"""
     return patterns[0] + "".join([pattern[-1] for pattern in patterns[1:]])
