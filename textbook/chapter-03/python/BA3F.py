@@ -46,8 +46,8 @@ def getACycle(graph, possible_starts):
     first = origin
     while True:
         if first in graph:
-            cycle.append([first, graph[first][0]])
             second = graph[first][0]
+            cycle.append([first, second])
             if len(graph[first]) == 1:
                 graph.pop(first, None)
             else:
