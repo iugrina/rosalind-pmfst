@@ -4,8 +4,8 @@
 A solution to a Rosalind bioinformatics problem
 
 Problem Title: Reconstruct a String from its k-mer Composition
-Rosalind ID: BA3G
-URL: http://rosalind.info/problems/ba3g/
+Rosalind ID: BA3H
+URL: http://rosalind.info/problems/ba3h/
 """
 
 

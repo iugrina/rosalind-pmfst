@@ -3,9 +3,9 @@
 """
 A solution to a Rosalind bioinformatics problem
 
-Problem Title: Find an Eulerian Cycle in a Graph
-Rosalind ID: BA3F
-URL: http://rosalind.info/problems/ba3f/
+Problem Title: Find an Eulerian Path in a Graph
+Rosalind ID: BA3G
+URL: http://rosalind.info/problems/ba3g/
 """
 
 
