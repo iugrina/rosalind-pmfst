@@ -8,127 +8,142 @@ Rosalind ID: BA2F
 URL: http://rosalind.info/problems/ba2f/
 """
 
+import random
 import re
 
 
-def rosalindprint(res, newline=False):
+def rosalind_print(result, newline=False):
     text = ""
     sep = " "
     if newline:
         sep = "\n"
-    for i in res:
+    for i in result:
         text = text + str(i) + sep
     return text.strip()
 
 
+def get_kmer(text, i, k):
+    """substring of text from i-th position for the next k letters"""
+    return text[i : (i + k)]
+
+
+def get_kmers(text, k):
+    """Find indices of all k-mers in text"""
+    kmers = set()
+    for i in range(0, len(text) - k + 1):
+        kmers.add(get_kmer(text, i, k))
+    return kmers
+
+
 def patternprob(pattern, profile):
     """return the probability of observing the pattern with the profile matrix"""
-    p = 1
-    for x in enumerate(pattern):
-        p = p * profile[x[1]][x[0]]
-    return p
+    prob = 1
+    for index, letter in enumerate(pattern):
+        prob *= profile[letter][index]
+    return prob
 
 
-def ProfileMostProbable(text, k, profile, first=False):
+def profile_most_probable(text, k, profile):
     """
     Find a Profile-most probable k-mer in a string text.
     Profile matrix is represented as a dict.
     """
-    maxkey = ""
-    maxp = -1
-    for end in range(k, len(text) + 1):
-        key = text[end - k : end]
-        tmp = patternprob(key, profile)
-        if tmp > maxp:
-            maxkey = key
-            maxp = tmp
-    return maxkey
+    max_kmer = ""
+    max_p = -1
+    kmers = get_kmers(text, k)
+    for kmer in kmers:
+        tmp = patternprob(kmer, profile)
+        if tmp > max_p:
+            max_kmer = kmer
+            max_p = tmp
+    return max_kmer
 
 
-def Motifs(dnalist, profile):
-    t = len(dnalist)
+def get_motifs(dna_list, profile):
     k = len(profile["A"])
 
-    motifs = []
-    for i in range(0, t):
-        motifs.append(ProfileMostProbable(dnalist[i], k, profile, first=True))
+    motifs = [profile_most_probable(dna_string, k, profile) for dna_string in dna_list]
     return motifs
 
 
-def createprofilematrix(patternlist, pseudocounts=False):
+def create_profile_matrix(pattern_list, pseudo_counts=False):
     """
     Returs a profile matrix as a dict based on a the list patternlist
     """
-    k = len(patternlist[0])
-    D = dict()
-    D["A"] = [0] * k
-    D["C"] = [0] * k
-    D["G"] = [0] * k
-    D["T"] = [0] * k
 
-    for pattern in patternlist:
-        for x in enumerate(pattern):
-            D[x[1]][x[0]] = D[x[1]][x[0]] + 1
+    k = len(pattern_list[0])
 
-    if pseudocounts:
-        D["A"] = [x + 1 for x in D["A"]]
-        D["C"] = [x + 1 for x in D["C"]]
-        D["G"] = [x + 1 for x in D["G"]]
-        D["T"] = [x + 1 for x in D["T"]]
+    profile_matrix = {}
+    profile_matrix["A"] = [0] * k
+    profile_matrix["C"] = [0] * k
+    profile_matrix["G"] = [0] * k
+    profile_matrix["T"] = [0] * k
+
+    for pattern in pattern_list:
+        for index, letter in enumerate(pattern):
+            profile_matrix[letter][index] = profile_matrix[letter][index] + 1
+
+    if pseudo_counts:
+        profile_matrix["A"] = [x + 1 for x in profile_matrix["A"]]
+        profile_matrix["C"] = [x + 1 for x in profile_matrix["C"]]
+        profile_matrix["G"] = [x + 1 for x in profile_matrix["G"]]
+        profile_matrix["T"] = [x + 1 for x in profile_matrix["T"]]
 
     for i in range(0, k):
-        s = D["A"][i] + D["C"][i] + D["G"][i] + D["T"][i]
-        D["A"][i] = D["A"][i] / s
-        D["C"][i] = D["C"][i] / s
-        D["G"][i] = D["G"][i] / s
-        D["T"][i] = D["T"][i] / s
-    return D
+        total = (
+            profile_matrix["A"][i]
+            + profile_matrix["C"][i]
+            + profile_matrix["G"][i]
+            + profile_matrix["T"][i]
+        )
+        profile_matrix["A"][i] = profile_matrix["A"][i] / total
+        profile_matrix["C"][i] = profile_matrix["C"][i] / total
+        profile_matrix["G"][i] = profile_matrix["G"][i] / total
+        profile_matrix["T"][i] = profile_matrix["T"][i] / total
+    return profile_matrix
 
 
-def Score(motifs):
+def score(motifs):
     """
-    score discrepancy in motifs
+    Score discrepancy in motifs
     """
-    t = len(motifs)
+    zzip = zip(*motifs)
 
-    tmp = "'" + motifs[0] + "'"
-    for m in motifs[1:]:
-        tmp = tmp + ", '" + m + "'"
-    zzip = eval("zip(" + tmp + ")")
-
-    maxcount = []
+    max_count = []
     for x in zzip:
-        As = sum([y == "A" for y in x])
-        Cs = sum([y == "C" for y in x])
-        Gs = sum([y == "G" for y in x])
-        Ts = sum([y == "T" for y in x])
-        maxcount.append(t - max(As, Cs, Gs, Ts))
-    return sum(maxcount)
+        n_a = sum([y == "A" for y in x])
+        n_c = sum([y == "C" for y in x])
+        n_g = sum([y == "G" for y in x])
+        n_t = sum([y == "T" for y in x])
+        max_count.append(len(motifs) - max(n_a, n_c, n_g, n_t))
+    return sum(max_count)
 
 
-def RandomizedMotifSearchAtom(dnalist, k):
-    import random
+def randomized_motif_search_atom(dna_list, k):
 
-    n = len(dnalist[0])
+    n_dna = len(dna_list[0])
 
-    randpos = [random.randint(0, n - k) for i in range(0, len(dnalist))]
-    bestmotifs = [x[1][x[0] : (x[0] + k)] for x in zip(randpos, dnalist)]
+    randpos = [random.randint(0, n_dna - k) for dna in dna_list]
+    bestmotifs = [dna[index : (index + k)] for index, dna in zip(randpos, dna_list)]
     motifs = bestmotifs
 
     while True:
-        profile = createprofilematrix(motifs, pseudocounts=True)
-        motifs = Motifs(dnalist, profile)
-        if Score(motifs) < Score(bestmotifs):
+        profile = create_profile_matrix(motifs, pseudo_counts=True)
+        motifs = get_motifs(dna_list, profile)
+        if score(motifs) < score(bestmotifs):
             bestmotifs = motifs
         else:
             return bestmotifs
 
 
-def RandomizedMotifSearch(dnalist, k, N=1000):
-    bestmotifs = RandomizedMotifSearchAtom(dnalist, k)
-    for i in range(1, N):
-        motifs = RandomizedMotifSearchAtom(dnalist, k)
-        if Score(motifs) < Score(bestmotifs):
+def randomized_motif_search(dna_list, k, n_runs=1000):
+    """
+    Returns best motifs
+    """
+    bestmotifs = randomized_motif_search_atom(dna_list, k)
+    for _ in range(n_runs):
+        motifs = randomized_motif_search_atom(dna_list, k)
+        if score(motifs) < score(bestmotifs):
             bestmotifs = motifs
     return bestmotifs
 
@@ -139,8 +154,8 @@ if __name__ == "__main__":
 
     inlines = [x.strip("\n") for x in sys.stdin.readlines()]
     k, t = [int(x) for x in inlines[0].strip().split(" ")]
-    dnalist = inlines[1:]
+    dna_list = inlines[1:]
 
-    res = RandomizedMotifSearch(dnalist, k, 1000)
+    res = randomized_motif_search(dna_list, k, 2000)
 
-    sys.stdout.write(re.sub(" ", "\n", rosalindprint(res)))
+    sys.stdout.write(re.sub(" ", "\n", rosalind_print(res)))
