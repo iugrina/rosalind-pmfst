@@ -35,7 +35,7 @@ def get_kmers(text, k):
     return kmers
 
 
-def patternprob(pattern, profile):
+def pattern_prob(pattern, profile):
     """return the probability of observing the pattern with the profile matrix"""
     prob = 1
     for index, letter in enumerate(pattern):
@@ -52,7 +52,7 @@ def profile_most_probable(text, k, profile):
     max_p = -1
     kmers = get_kmers(text, k)
     for kmer in kmers:
-        tmp = patternprob(kmer, profile)
+        tmp = pattern_prob(kmer, profile)
         if tmp > max_p:
             max_kmer = kmer
             max_p = tmp
@@ -116,6 +116,7 @@ def score(motifs):
         n_g = sum([y == "G" for y in x])
         n_t = sum([y == "T" for y in x])
         max_count.append(len(motifs) - max(n_a, n_c, n_g, n_t))
+
     return sum(max_count)
 
 
