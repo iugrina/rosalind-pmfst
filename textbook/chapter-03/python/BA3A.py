@@ -9,20 +9,32 @@ URL: http://rosalind.info/problems/ba3a/
 """
 
 
-def rosalindprint(res, newline=False):
+def rosalind_print(result, newline=False):
     text = ""
     sep = " "
     if newline:
         sep = "\n"
-    for i in res:
+    for i in result:
         text = text + str(i) + sep
     return text.strip()
 
 
-def kmerComposition(text, k):
+def get_kmer(text, i, k):
+    """substring of text from i-th position for the next k letters"""
+    return text[i : (i + k)]
+
+
+def get_kmers(text, k):
+    """Find indices of all k-mers in text"""
+    kmers = set()
+    for i in range(0, len(text) - k + 1):
+        kmers.add(get_kmer(text, i, k))
+    return kmers
+
+
+def get_kmer_composition(text, k):
     """Return all kmers appearing in text sorted in lexografical order"""
-    tmp = sorted([text[i : (i + k)] for i in range(0, len(text) - k + 1)])
-    return tmp
+    return sorted(get_kmers(text, k))
 
 
 if __name__ == "__main__":
@@ -33,6 +45,6 @@ if __name__ == "__main__":
     k = int(inlines[0])
     text = inlines[1]
 
-    res = kmerComposition(text, k)
+    res = get_kmer_composition(text, k)
 
-    sys.stdout.write(rosalindprint(res, newline=True))
+    sys.stdout.write(rosalind_print(res, newline=True))
