@@ -3,9 +3,9 @@
 """
 A solution to a Rosalind bioinformatics problem
 
-Problem Title: Implement 2-BreakOnGenome
-Rosalind ID: BA6K
-URL: http://rosalind.info/problems/ba6k/
+Problem Title: 2-Break Distance Problem
+Rosalind ID: BA6C
+URL: http://rosalind.info/problems/ba6c/
 """
 
 
